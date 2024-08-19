@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using AngleSharp.Dom;
 using Bunit;
 using FluentAssertions;
 using Microsoft.AspNetCore.Components.Web;
@@ -162,11 +163,14 @@ namespace MudBlazor.UnitTests.Components
             form.IsValid.Should().BeFalse();
             form.Errors.Length.Should().Be(0);
             var checkbox = comp.FindComponent<MudCheckBox<bool>>();
+            checkbox.Find("input").IsValid().Should().BeFalse();
             // click the checkbox to make the form valid
             checkbox.Find("input").Change(true);
+            checkbox.Find("input").IsValid().Should().BeTrue();
             form.IsValid.Should().BeTrue();
             // click the checkbox to make the form invalid again because the checkbox is required
             checkbox.Find("input").Change(false);
+            checkbox.Find("input").IsValid().Should().BeFalse();
             checkbox.Instance.Error.Should().BeTrue();
             checkbox.Instance.ErrorText.Should().Be("You must agree");
             form.IsValid.Should().BeFalse();
